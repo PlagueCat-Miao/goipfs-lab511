@@ -2,24 +2,24 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"github.com/PlagueCat-Miao/goipfs-lab511/constdef"
-	"github.com/PlagueCat-Miao/goipfs-lab511/dal/ipfs"
-	"github.com/PlagueCat-Miao/goipfs-lab511/operate"
+
+	"github.com/PlagueCat-Miao/goipfs-lab511/nodes"
 	"github.com/PlagueCat-Miao/goipfs-lab511/service"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"time"
 )
 
-func serverListen(router *gin.Engine) {
+func serverListen(router *gin.Engine,port int) {
 	server := &http.Server{
-		Addr:    ":8888",
+		Addr:    ":"+strconv.Itoa(port),
 		Handler: router,
 	}
+	log.Printf("ListenAndServePort: %+v",port)
 	go func() {
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Listen:%s\n", err)
@@ -41,42 +41,15 @@ func serverListen(router *gin.Engine) {
 		log.Fatal("server shutdown: ", err)
 	}
 }
-func initGatewayServive() error{
-	//ipfs shell连接
-	ipfsClient,err:=ipfs.InitIPFS()
-	if err!=nil ||ipfsClient == nil {
-		return fmt.Errorf("[ipfs-err]: %v",err)
-	}
-	//本机状态更新
-	operate.InitMyInfo(ipfsClient.DHash,8888,constdef.GatewayStatus,100,100)
-	return nil
-}
-func initCloudServive() error{
-	//ipfs shell连接
-	ipfsClient,err:=ipfs.InitIPFS()
-	if err!=nil ||ipfsClient == nil {
-		return fmt.Errorf("[ipfs-init-err]: %v",err)
-	}
-	ipfs := ipfsClient.NewClient()
-	peers ,err:=ipfs.BootstrapAdd([]string{constdef.MyCloudNode})
-	if err!=nil{
-		return fmt.Errorf("[ipfs-BootstrapAdd-err]: %v",err)
-	}
-	log.Printf("My ipfs peers: %+v",peers)
-	//本机状态更新
-	operate.InitMyInfo(ipfsClient.DHash,8888,constdef.CloudStatus,100,100)
-	return nil
-}
 
 func main() {
 	//<================================初始化==================================>
-	err:=initCloudServive()
-
-
+	port,err:=nodes.InitCloudServive()
 	if err!=nil{
 		log.Printf("[initServive-err]:%v",err)
 		return
 	}
+
 	router := gin.Default()
 	//<================================功能注册================================>
 	router.POST("/login",service.Login)
@@ -84,7 +57,7 @@ func main() {
 	router.POST("/ipfssave",service.IpfsSave)
 
 	//<================================开启服务================================>
-	serverListen(router)
+	serverListen(router,port)
 
 	//service.UManagement.SaveUserCSV()
 	log.Println("server exiting...")

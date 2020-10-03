@@ -1,7 +1,6 @@
 package constdef
 
 const IPFSHost = "localhost:5001"
-const IPFSMyId = "Qma6wFrmDQ48u7GrZvvzrj5RkMAFBCNepNx62fVe5134GL"
 
 type UserStatus int32
 
@@ -13,4 +12,6 @@ const (
 
 const SaveListLesslength = 2
 
-const MyCloudNode = "/ip4/127.0.0.1/tcp/4001/ipfs/Qma6wFrmDQ48u7GrZvvzrj5RkMAFBCNepNx62fVe5134GL"
+const IPFSNodeUrlFormat = "/ip4/%s/tcp/4001/ipfs/%s"
+
+const LocalTestNode = "/ip4/127.0.0.1/tcp/4001/ipfs/Qma6wFrmDQ48u7GrZvvzrj5RkMAFBCNepNx62fVe5134GL"

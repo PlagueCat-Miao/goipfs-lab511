@@ -23,3 +23,5 @@ func PostJson(url string, data interface{}) ([]byte,error) {
 	result, _ := ioutil.ReadAll(resp.Body)
 	return result,nil
 }
+
+

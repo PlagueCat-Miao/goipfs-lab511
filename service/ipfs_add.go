@@ -7,6 +7,7 @@ import (
 	"github.com/PlagueCat-Miao/goipfs-lab511/model"
 	"github.com/PlagueCat-Miao/goipfs-lab511/operate"
 	"github.com/PlagueCat-Miao/goipfs-lab511/util"
+	"github.com/bitly/go-simplejson"
 	"github.com/gin-gonic/gin"
 	"log"
 
@@ -45,11 +46,22 @@ func IpfsAdd(c *gin.Context) {
     for i, targetCloud :=range CloudSaveList{
 		url := fmt.Sprintf("http://%v:%v/ipfssave", targetCloud.Ip, targetCloud.Port)
 		addParams.BackupNumber = i
-		_,err:= httppack.PostJson(url,addParams)
+		CloudinfoByte,err:= httppack.PostJson(url,addParams)
 		if err != nil{
 			failList =append(failList,targetCloud)
 			log.Printf("[PostJson-err]:%v,url:%v targetCloud:%v addParams:%+v",err,url,targetCloud,addParams)
+		}else{ // 存储成功 解析返回参数 更新状态
+			CloudinfoJson, err := simplejson.NewJson([]byte(CloudinfoByte))
+			if  err != nil{
+				log.Printf("[simplejson-err]:%v,url:%v targetCloud:%v addParams:%+v",err,url,targetCloud,addParams)
+				continue
+			}
+			targetCloud.Remain = CloudinfoJson.Get("remain").MustInt64()
+			if  targetCloud.Remain < 50{
+				log.Printf("[Cloud.Remain-warning]: no spare space, url:%v targetCloud:%+v Remain:%v",url,targetCloud, targetCloud.Remain)
+			}
 		}
+
 	}
 	//返回给用户通信状态
 	msg :=map[string]interface{}{
