@@ -19,7 +19,7 @@ func InitGatewayServive() (int, error) {
 		return -1, fmt.Errorf("[db-err]: %v", err)
 	}
 	//本机状态更新
-	operate.InitMyInfo(ipfsClient.DHash, constdef.GatewayPort, constdef.GatewayStatus, 100, 100)
+	operate.InitMyInfo(ipfsClient.DHash, constdef.GatewayPort, constdef.GatewayStatus, 4096)
 	//加载上一次关闭时的连接用户
 	operate.ClientsMgr.LoadUserCSV()
 	return constdef.GatewayPort, nil

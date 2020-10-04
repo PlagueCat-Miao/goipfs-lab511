@@ -1,5 +1,6 @@
 package constdef
 
 const (
-	OutputFilePath = "./data/"
+	OutputFilePath = "./output/data/"
+
 )

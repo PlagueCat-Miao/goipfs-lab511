@@ -15,3 +15,11 @@ ipfs
       ``` 
  - ipfs启动
     - `ipfs daemon`
+ - 各个节点启动
+    - `make runEdge` 边缘节点-脚本
+    - `make runGateway` 网关-服务-mysql
+    - `make runCloud` 云节点-服务-存储
+
+## ipfs 系统管理
+   - ipfs数据存放在 ./ipfs/block 中，通过`du -h --max-depth=1 ~/.ipfs` 可以查询
+

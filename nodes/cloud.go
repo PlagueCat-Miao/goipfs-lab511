@@ -18,10 +18,11 @@ func InitCloudServive() (int, error) {
 	}
 
 	//本机状态更新
-	operate.InitMyInfo(ipfsClient.DHash, constdef.CloudPort, constdef.CloudStatus, 100, 100)
+	operate.InitMyInfo(ipfsClient.DHash, constdef.CloudPort, constdef.CloudStatus, 4096)
 
 	//主动连接 网关节点
 	ipfs := ipfsClient.NewClient()
+	//TODO M 云节点的网关List 可以配置成csv
 	peers, err := ipfs.BootstrapAdd([]string{fmt.Sprintf(constdef.LocalTestNode)})
 	if err != nil {
 		return -1, fmt.Errorf("[ipfs-BootstrapAdd-err]: %v", err)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"github.com/PlagueCat-Miao/goipfs-lab511/constdef"
 	"github.com/PlagueCat-Miao/goipfs-lab511/dal/db"
 	"github.com/PlagueCat-Miao/goipfs-lab511/operate"
@@ -46,9 +47,31 @@ func serverListen(router *gin.Engine, port int) {
 }
 
 func main() {
+	//<================================入参解析=================================>
+	var status int
+	var help bool
+	flag.IntVar(&status, "s", int(constdef.GatewayStatus), "身份")
+	flag.BoolVar(&help, "h", false, "帮助")
+
+	//解析命令行参数
+	flag.Parse()
+	if help {
+		log.Println("USAGE \n use Makefile ")
+		return
+	}
 	//<================================初始化==================================>
-	//port,err:=nodes.InitCloudServive()
-	port, err := nodes.InitGatewayServive()
+	var port int
+	var err error
+	switch status {
+	case int(constdef.GatewayStatus):
+		port, err = nodes.InitGatewayServive()
+	case int(constdef.CloudStatus):
+		port,err=nodes.InitCloudServive()
+	default:
+		log.Printf("[status-err]: invail status,status:%+v",status)
+		return
+	}
+
 	if err != nil {
 		log.Printf("[initServive-err]:%v", err)
 		return

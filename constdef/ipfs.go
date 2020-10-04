@@ -12,9 +12,13 @@ const (
 
 const SaveListLesslength = 2
 
-const IPFSNodeUrlFormat = "/ip4/%s/tcp/4001/ipfs/%s"
+const(
+	IPFSNodeUrlFormat = "/ip4/%s/tcp/4001/ipfs/%s"
 
-const LocalTestNode = "/ip4/127.0.0.1/tcp/4001/ipfs/Qma6wFrmDQ48u7GrZvvzrj5RkMAFBCNepNx62fVe5134GL"
+	LocalTestNode = "/ip4/127.0.0.1/tcp/4001/ipfs/Qma6wFrmDQ48u7GrZvvzrj5RkMAFBCNepNx62fVe5134GL"
+)
+
+const IPFSPath = "/home/hellcat/.ipfs"
 
 type OpTypeEvent int32
 

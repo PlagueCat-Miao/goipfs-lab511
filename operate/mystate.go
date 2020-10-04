@@ -3,6 +3,7 @@ package operate
 import (
 	"github.com/PlagueCat-Miao/goipfs-lab511/constdef"
 	"github.com/PlagueCat-Miao/goipfs-lab511/model"
+	"github.com/PlagueCat-Miao/goipfs-lab511/util"
 	"sync"
 	"time"
 )
@@ -14,7 +15,7 @@ type MyInfoStruct struct {
 	Lock sync.Mutex
 }
 
-func InitMyInfo(dhash string, port int, status constdef.UserStatus, capacity, remain int64) *MyInfoStruct {
+func InitMyInfo(dhash string, port int, status constdef.UserStatus, capacity int64) *MyInfoStruct {
 	myInfo := &MyInfoStruct{
 		ClientInfo: model.ClientInfo{
 			Dhash:    dhash,
@@ -22,7 +23,7 @@ func InitMyInfo(dhash string, port int, status constdef.UserStatus, capacity, re
 			Port:     port,
 			Status:   status,
 			Capacity: capacity,
-			Remain:   remain,
+			Remain:  capacity - util.DirSize(constdef.IPFSPath),
 		},
 		Lock: sync.Mutex{},
 	}

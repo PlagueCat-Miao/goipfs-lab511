@@ -31,7 +31,6 @@ func IpfsSave(c *gin.Context) {
 		return
 	}
 
-
 	// ipfsget 此处交给子协程独立进行
 	go func() {
 		time.Sleep(1 * time.Second)
@@ -56,10 +55,12 @@ func IpfsSave(c *gin.Context) {
 			log.Printf("[IpfsSave-PostJson-err]:err=%v msgErr=%v ,url:%v", err,msgErr,url)
 		}
 	}()
+	//应当每次调用时IpfsSave时 扫描一下存储空间更新一下，再相减文件送出
+	operate.MyInfo.Remain = operate.MyInfo.Capacity - util.DirSize(constdef.IPFSPath)
 	//返回给云端自己的状态
 	msg := map[string]interface{}{
 		"dhash":  operate.MyInfo.Dhash,
-		"remain": operate.MyInfo.Remain,
+		"remain": operate.MyInfo.Remain-addParams.FileSize,
 	}
 	util.ResponseOK(c, msg)
 }
