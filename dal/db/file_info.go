@@ -56,6 +56,8 @@ func (i *IPFSFileInfoDB) GetInfoList(offset, limit int64, queryFactor map[string
 	query = query.Model(&ret).Count(&total)
 	if query.Error != nil {
 		return nil, 0, query.Error
+	}else if total ==0{ //没有查到结果
+		return nil, 0, nil
 	} else if total <= offset {
 		return nil, 0, fmt.Errorf(" offset > total:Cross the border,offset:%v total:%v  ", offset, total)
 	}
@@ -133,8 +135,7 @@ func queryFactorParse(queryFactor map[string]string) map[string]interface{} {
 			splits := strings.Split(str, ";")
 			ret[fmt.Sprintf("%+v >=  FROM_UNIXTIME(?)", key)] = splits[0]
 			ret[fmt.Sprintf("%+v < FROM_UNIXTIME(?)", key)] = splits[1]
-
-		case "fhash":
+		case "fhash","title","uploader":
 			ret[fmt.Sprintf("%v = ?", key)] = str
 		default:
 			ret[fmt.Sprintf("%+v like ?", key)] = "%" + str + "%"

@@ -47,8 +47,8 @@ func serverListen(router *gin.Engine, port int) {
 
 func main() {
 	//<================================初始化==================================>
-	port,err:=nodes.InitCloudServive()
-	//port, err := nodes.InitGatewayServive()
+	//port,err:=nodes.InitCloudServive()
+	port, err := nodes.InitGatewayServive()
 	if err != nil {
 		log.Printf("[initServive-err]:%v", err)
 		return
@@ -60,6 +60,8 @@ func main() {
 	router.POST("/ipfsadd", service.IpfsAdd)
 	router.POST("/ipfssave", service.IpfsSave)
 	router.POST("/ipfsreport", service.IpfsReport)
+
+	router.POST("/getfilelist", service.GetFileList)
 	//<================================开启服务================================>
 	serverListen(router, port)
 
