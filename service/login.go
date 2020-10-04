@@ -19,6 +19,6 @@ func Login(c *gin.Context) {
 	if err != nil {
 		util.ResponseError(c, err)
 	}
-	msg := map[string]interface{}{"Dhash": userLoginInfo.Dhash}
+	msg := map[string]interface{}{"dhash": userLoginInfo.Dhash}
 	util.ResponseOK(c, msg)
 }

@@ -50,7 +50,7 @@ func (d *IPFSCtrl) UploadIPFSFile(filePath string) (string, error) {
 	}
 	hash, err := ipfs.Add(fileReader)
 	if err != nil {
-		return "",fmt.Errorf("[func Add] 上传ipfs时错误 err= %+v ", err)
+		return "", fmt.Errorf("[func Add] 上传ipfs时错误 err= %+v ", err)
 	}
 	return hash, nil
 }

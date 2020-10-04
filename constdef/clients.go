@@ -1,3 +1,3 @@
 package constdef
 
-const UserCSVName = "ClientInfo.csv"
+const UserCSVName = "./conf/ClientInfo.csv"

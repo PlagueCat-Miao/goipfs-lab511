@@ -2,6 +2,9 @@ package main
 
 import (
 	"context"
+	"github.com/PlagueCat-Miao/goipfs-lab511/constdef"
+	"github.com/PlagueCat-Miao/goipfs-lab511/dal/db"
+	"github.com/PlagueCat-Miao/goipfs-lab511/operate"
 
 	"github.com/PlagueCat-Miao/goipfs-lab511/nodes"
 	"github.com/PlagueCat-Miao/goipfs-lab511/service"
@@ -14,12 +17,12 @@ import (
 	"time"
 )
 
-func serverListen(router *gin.Engine,port int) {
+func serverListen(router *gin.Engine, port int) {
 	server := &http.Server{
-		Addr:    ":"+strconv.Itoa(port),
+		Addr:    ":" + strconv.Itoa(port),
 		Handler: router,
 	}
-	log.Printf("ListenAndServePort: %+v",port)
+	log.Printf("ListenAndServePort: %+v", port)
 	go func() {
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Listen:%s\n", err)
@@ -45,21 +48,28 @@ func serverListen(router *gin.Engine,port int) {
 func main() {
 	//<================================初始化==================================>
 	port,err:=nodes.InitCloudServive()
-	if err!=nil{
-		log.Printf("[initServive-err]:%v",err)
+	//port, err := nodes.InitGatewayServive()
+	if err != nil {
+		log.Printf("[initServive-err]:%v", err)
 		return
 	}
 
 	router := gin.Default()
 	//<================================功能注册================================>
-	router.POST("/login",service.Login)
-	router.POST("/ipfsadd",service.IpfsAdd)
-	router.POST("/ipfssave",service.IpfsSave)
-
+	router.POST("/login", service.Login)
+	router.POST("/ipfsadd", service.IpfsAdd)
+	router.POST("/ipfssave", service.IpfsSave)
+	router.POST("/ipfsreport", service.IpfsReport)
 	//<================================开启服务================================>
-	serverListen(router,port)
+	serverListen(router, port)
 
-	//service.UManagement.SaveUserCSV()
+	//<================================结束程序================================>
 	log.Println("server exiting...")
+	if db.FileInfoDB != nil {
+		db.FileInfoDB.Close()
+	}
+	if operate.MyInfo.Status == constdef.GatewayStatus {
+		operate.ClientsMgr.SaveUserCSV()
+	}
 
 }

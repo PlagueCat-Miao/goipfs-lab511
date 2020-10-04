@@ -1,3 +1,3 @@
 package constdef
 
-const JsonContentType ="application/json;charset=utf-8"
+const JsonContentType = "application/json;charset=utf-8"

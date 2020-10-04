@@ -12,6 +12,7 @@ import (
 	"sync"
 	"time"
 )
+
 var ClientsMgr *ClientsManager
 
 func init() {
@@ -19,12 +20,12 @@ func init() {
 }
 
 type ClientsManager struct {
-	ClientList map[string]*model.ClientInfo
+	ClientList        map[string]*model.ClientInfo
 	EdgeClientList    []*model.ClientInfo
 	GatewayClientList []*model.ClientInfo
 	CloudClientList   []*model.ClientInfo
 
-	Lock       sync.Mutex
+	Lock sync.Mutex
 }
 
 func NewClientsManager() *ClientsManager {
@@ -45,17 +46,16 @@ func (c *ClientsManager) AddUser(ip string, info *model.ClientInfo) error {
 	c.Lock.Lock()
 	c.ClientList[fmt.Sprintf("%v:%v", ip, info.Port)] = info
 	Status := info.Status
-	if constdef.UserStatus(Status) ==  constdef.EdgeStatus {
-		c.EdgeClientList =  append(	c.EdgeClientList,info)
-	}else if constdef.UserStatus(Status) ==  constdef.CloudStatus{
-		c.CloudClientList =  append(	c.CloudClientList,info)
-	}else if constdef.UserStatus(Status) ==  constdef.GatewayStatus{
-		c.GatewayClientList =  append(	c.GatewayClientList,info)
+	if constdef.UserStatus(Status) == constdef.EdgeStatus {
+		c.EdgeClientList = append(c.EdgeClientList, info)
+	} else if constdef.UserStatus(Status) == constdef.CloudStatus {
+		c.CloudClientList = append(c.CloudClientList, info)
+	} else if constdef.UserStatus(Status) == constdef.GatewayStatus {
+		c.GatewayClientList = append(c.GatewayClientList, info)
 	}
 	c.Lock.Unlock()
 	return nil
 }
-
 
 //网关下线时，保存数据
 func (c *ClientsManager) SaveUserCSV() {
@@ -71,7 +71,7 @@ func (c *ClientsManager) SaveUserCSV() {
 	w.Comma = ','
 	w.UseCRLF = true
 	for key, client := range c.ClientList {
-		row := []string{key, client.Dhash, string(client.Status), client.Ip, strconv.Itoa(client.Port), strconv.FormatInt(client.Capacity,10), strconv.FormatInt(client.Remain,10)}
+		row := []string{key, client.Dhash, string(client.Status), client.Ip, strconv.Itoa(client.Port), strconv.FormatInt(client.Capacity, 10), strconv.FormatInt(client.Remain, 10)}
 		err = w.Write(row)
 	}
 	if err != nil {
@@ -86,7 +86,7 @@ func (c *ClientsManager) LoadUserCSV() {
 	fileName := constdef.UserCSVName
 	fs, err := os.Open(fileName)
 	if err != nil {
-		log.Fatalf("can not open the file, err is %+v", err)
+		log.Printf("can not open the file, err is %+v", err)
 	}
 	defer fs.Close()
 
@@ -97,15 +97,16 @@ func (c *ClientsManager) LoadUserCSV() {
 		log.Fatalf("can not readall, err is %+v", err)
 	}
 	c.Lock.Lock()
+
 	for _, row := range content {
 		key := row[0]
 		Dhash := row[1]
 		Status, _ := strconv.Atoi(row[2])
 		Ip := row[3]
 		Port, _ := strconv.Atoi(row[4])
-		Capacity, _ := strconv.ParseInt( row[5], 10, 64)
-		Remain, _ := strconv.ParseInt( row[6], 10, 64)
-		info:= &model.ClientInfo{
+		Capacity, _ := strconv.ParseInt(row[5], 10, 64)
+		Remain, _ := strconv.ParseInt(row[6], 10, 64)
+		info := &model.ClientInfo{
 			Dhash:            Dhash,
 			Status:           constdef.UserStatus(Status),
 			Ip:               Ip,
@@ -114,17 +115,17 @@ func (c *ClientsManager) LoadUserCSV() {
 			Remain:           Remain,
 			LastPingPongTime: time.Now(),
 		}
-		c.ClientList[key] =info
-		if constdef.UserStatus(Status) ==  constdef.EdgeStatus {
-			c.EdgeClientList =  append(	c.EdgeClientList,info)
-		}else if constdef.UserStatus(Status) ==  constdef.CloudStatus{
-			c.CloudClientList =  append(	c.CloudClientList,info)
-		}else if constdef.UserStatus(Status) ==  constdef.GatewayStatus{
-			c.GatewayClientList =  append(	c.GatewayClientList,info)
+		c.ClientList[key] = info
+		if constdef.UserStatus(Status) == constdef.EdgeStatus {
+			c.EdgeClientList = append(c.EdgeClientList, info)
+		} else if constdef.UserStatus(Status) == constdef.CloudStatus {
+			c.CloudClientList = append(c.CloudClientList, info)
+		} else if constdef.UserStatus(Status) == constdef.GatewayStatus {
+			c.GatewayClientList = append(c.GatewayClientList, info)
 		}
 	}
+	log.Printf("Gateway ClientList %+v", c.ClientList)
 
 	c.Lock.Unlock()
 
 }
-
