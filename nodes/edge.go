@@ -33,22 +33,23 @@ func EdgeLogin(){
 	fmt.Printf("Input ip:\n")
 
 	fmt.Scanf("%s",&GateWayIp)
-	ipfs:=ipfs.IPFSClient.NewClient()
-	peers, err := ipfs.BootstrapAdd([]string{fmt.Sprintf(constdef.LocalTestNode)})
-	if err != nil {
-		log.Printf("[Login-BootstrapAdd-err]: %v", err)
-		return
-	}
-
-	url := fmt.Sprintf("http://%v:%v/login", GateWayIp, constdef.GatewayPort)
+	url := fmt.Sprintf("http://%v:%v/login",GateWayIp, constdef.GatewayPort)
 	msg, err := httppack.PostJson(url, &operate.MyInfo)
 	if err != nil {
-		log.Printf("[Login-PostJson-err]: %v, url:%v", err, url)
+		log.Printf("[httpPost-login-err]: %v, url:%v", err, url)
 		return
 	}
-	_, err = util.ResponseParse(msg)
+	msgJson, err := util.ResponseParse(msg)
 	if err != nil {
-		fmt.Errorf("[Login-PostJson-err]: %v, url:%v", err, url)
+		log.Printf("[httpPost-login-err]: %v, url:%v", err, url)
+		return
+	}
+	gDhash:= msgJson.Get("gatewaydhash").MustString()
+
+	ipfsC:=ipfs.IPFSClient.NewClient()
+	peers, err := ipfsC.BootstrapAdd([]string{fmt.Sprintf(constdef.IPFSNodeUrlFormat,GateWayIp,gDhash)})
+	if err != nil {
+		log.Printf("[Login-BootstrapAdd-err]: %v", err)
 		return
 	}
 	log.Printf("My ipfs peers: %+v", peers)
