@@ -9,6 +9,7 @@ require (
 	github.com/ipfs/go-ipfs-api v0.2.0
 	github.com/jinzhu/gorm v1.9.16
 	github.com/json-iterator/go v1.1.9
+	github.com/smartystreets/goconvey v1.6.4 // indirect
 	go.uber.org/config v1.4.0
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect

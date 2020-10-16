@@ -14,7 +14,7 @@ func Login(c *gin.Context) {
 		return
 	}
 	clientIP := c.ClientIP()
-
+	userLoginInfo.Ip = clientIP
 	err := operate.ClientsMgr.AddUser(clientIP, &userLoginInfo)
 	if err != nil {
 		util.ResponseError(c, err)

@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"strconv"
@@ -52,7 +53,9 @@ func main() {
 	var help bool
 	flag.IntVar(&status, "s", int(constdef.GatewayStatus), "身份")
 	flag.BoolVar(&help, "h", false, "帮助")
-
+	go func() {
+		http.ListenAndServe("127.0.0.1:8848", nil)
+	}()
 	//解析命令行参数
 	flag.Parse()
 	if help {

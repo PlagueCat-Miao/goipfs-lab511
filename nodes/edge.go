@@ -120,7 +120,7 @@ func EdgeReadFile(){
 		fmt.Scanf("%s",&order)
 		switch order{
 		case "0":
-			break
+			return
 		case "P":
 			if offset - limit >=0{offset-=limit}
 		case "N":
