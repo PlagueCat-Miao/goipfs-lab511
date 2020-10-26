@@ -5,6 +5,8 @@ ipfs
  - login登记
  - 强制存储功能
  - 存储记录登记
+## 文件ji 
+ 
 ## quick-start
  - ipfs安装
     - ``` shell
@@ -23,3 +25,6 @@ ipfs
 ## ipfs 系统管理
    - ipfs数据存放在 ./ipfs/block 中，通过`du -h --max-depth=1 ~/.ipfs` 可以查询
 
+###附录
+    `ffplay -fflags nobuffer -analyzeduration 500000 -i rtmp://127.0.0.1:1935/live`
+    `ffmpeg -r 30 -i /dev/video0 -vcodec h264 -max_delay 100 -f flv -g 5 -b 700000 rtmp://127.0.0.1:1935/live -map 0:0 -map 0:2`

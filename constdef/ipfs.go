@@ -5,9 +5,9 @@ const IPFSHost = "localhost:5001"
 type UserStatus int32
 
 const (
-	EdgeStatus    UserStatus = 1
-	GatewayStatus UserStatus = 2
-	CloudStatus   UserStatus = 3
+	EdgeStatus    UserStatus = 1 //边缘节点
+	GatewayStatus UserStatus = 2 //网关节点
+	CloudStatus   UserStatus = 3 //云节点
 )
 
 const SaveListLesslength = 2

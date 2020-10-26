@@ -4,13 +4,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/PlagueCat-Miao/goipfs-lab511/constdef"
 	"github.com/PlagueCat-Miao/goipfs-lab511/nodes"
 	"log"
 )
 
 func main(){
 	_,err:=nodes.InitEdgeServive()
-
+	nodes.EdgeServerListen(constdef.EdgePort)
 	if err != nil {
 		log.Printf("[InitEdgeServive-err]: %v", err )
 		return

@@ -11,5 +11,8 @@ runCloud :
 runEdge :
 	go run cmd/edge.go
 
+testRtmp :
+	go test  -cover -v dal/rtmpffmpeg/r* -test.run TestRmptFfmpegPull -count=1
+
 clear :
 	rm -rf output/main

@@ -10,7 +10,10 @@ import (
 	"github.com/PlagueCat-Miao/goipfs-lab511/operate"
 	"github.com/PlagueCat-Miao/goipfs-lab511/service"
 	"github.com/PlagueCat-Miao/goipfs-lab511/util"
+	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
+	"strconv"
 )
 
 func InitEdgeServive() (int, error) {
@@ -186,4 +189,24 @@ func EdgeGetFile(){
 	if err != nil {
 		log.Printf("[IpfsSave-GetIPFSFile-err]:%v", err)
 	}
+}
+
+
+func EdgeServerListen( port int) {
+	router := gin.Default()
+	//<================================功能注册================================>
+
+	router.POST("/rtmppush", service.RtmpPush)
+	//<================================开启服务================================>
+	server := &http.Server{
+		Addr:    ":" + strconv.Itoa(port),
+		Handler: router,
+	}
+	log.Printf("InitListen: %+v", port)
+	go func() {
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("Listen:%s\n", err)
+		}
+	}()
+
 }

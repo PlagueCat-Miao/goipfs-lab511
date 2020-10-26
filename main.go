@@ -54,7 +54,7 @@ func main() {
 	flag.IntVar(&status, "s", int(constdef.GatewayStatus), "身份")
 	flag.BoolVar(&help, "h", false, "帮助")
 	go func() {
-		http.ListenAndServe("127.0.0.1:8848", nil)
+		http.ListenAndServe("127.0.0.1:8848", nil) //pprof
 	}()
 	//解析命令行参数
 	flag.Parse()
@@ -88,6 +88,9 @@ func main() {
 	router.POST("/ipfsreport", service.IpfsReport)
 
 	router.POST("/getfilelist", service.GetFileList)
+
+	router.POST("/rtmpctrl", service.RtmpCtrl)
+
 	//<================================开启服务================================>
 	serverListen(router, port)
 
