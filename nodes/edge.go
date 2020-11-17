@@ -143,6 +143,7 @@ func readReq(limit,offset int64)(int64,string,error){
 		Limit:      limit,
 		Offset:     offset,
 	}
+
 	msg,err:=httppack.PostJson(url,params)
 	if err != nil {
 		return 0,"",fmt.Errorf("[ReadFile-httpPost-err]: %v, url:%v", err, url)

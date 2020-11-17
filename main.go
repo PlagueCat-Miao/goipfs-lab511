@@ -59,7 +59,7 @@ func main() {
 	//解析命令行参数
 	flag.Parse()
 	if help {
-		log.Println("USAGE \n use Makefile ")
+		log.Println("USAGE \n 请使用 Makefile 启动！！！！！！")
 		return
 	}
 	//<================================初始化==================================>
