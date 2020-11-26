@@ -2,4 +2,4 @@ myinfo: {status: 2,capacity: 4096}
 friendlist:
     gateway:  #网关节点的IP
       - "127.0.0.1"
-      # - "10.112.104.151"
+     # - "10.112.104.151"

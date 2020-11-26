@@ -39,7 +39,7 @@ func RtmpCtrl(c *gin.Context) {
 		return
 	}
 	state := "start"
-	if rtmpCtrlParams.Enable{
+	if !rtmpCtrlParams.Enable{
 		state = "stop"
 	}
 	//返回给用户通信状态

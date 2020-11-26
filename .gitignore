@@ -1,2 +1,3 @@
-/output/
-/test/data/
+output/*
+
+/test/

@@ -56,7 +56,8 @@ func IpfsSave(c *gin.Context) {
 		}
 	}()
 	//应当每次调用时IpfsSave时 扫描一下存储空间更新一下，再相减文件送出
-	operate.MyInfo.Remain = operate.MyInfo.Capacity - util.DirSize(constdef.IPFSPath)
+	mypath,_:=util.ShowMyHomePath()
+	operate.MyInfo.Remain = operate.MyInfo.Capacity - util.DirSize(fmt.Sprintf(constdef.IPFSPath,mypath))
 	//返回给云端自己的状态
 	msg := map[string]interface{}{
 		"dhash":  operate.MyInfo.Dhash,

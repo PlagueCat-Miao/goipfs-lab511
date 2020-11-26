@@ -1,6 +1,7 @@
 package operate
 
 import (
+	"fmt"
 	"github.com/PlagueCat-Miao/goipfs-lab511/constdef"
 	"github.com/PlagueCat-Miao/goipfs-lab511/model"
 	"github.com/PlagueCat-Miao/goipfs-lab511/util"
@@ -16,6 +17,7 @@ type MyInfoStruct struct {
 }
 
 func InitMyInfo(dhash string, port int, status constdef.UserStatus, capacity int64) *MyInfoStruct {
+	mypath,_:=util.ShowMyHomePath()
 	myInfo := &MyInfoStruct{
 		ClientInfo: model.ClientInfo{
 			Dhash:    dhash,
@@ -23,7 +25,7 @@ func InitMyInfo(dhash string, port int, status constdef.UserStatus, capacity int
 			Port:     port,
 			Status:   status,
 			Capacity: capacity,
-			Remain:  capacity - util.DirSize(constdef.IPFSPath),
+			Remain:  capacity - util.DirSize(fmt.Sprintf(constdef.IPFSPath,mypath)),
 		},
 		Lock: sync.Mutex{},
 	}

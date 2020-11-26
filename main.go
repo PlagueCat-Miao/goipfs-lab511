@@ -3,9 +3,11 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"github.com/PlagueCat-Miao/goipfs-lab511/constdef"
 	"github.com/PlagueCat-Miao/goipfs-lab511/dal/db"
 	"github.com/PlagueCat-Miao/goipfs-lab511/operate"
+	"github.com/PlagueCat-Miao/goipfs-lab511/util"
 
 	"github.com/PlagueCat-Miao/goipfs-lab511/nodes"
 	"github.com/PlagueCat-Miao/goipfs-lab511/service"
@@ -63,8 +65,23 @@ func main() {
 		return
 	}
 	//<================================初始化==================================>
+	// output相对路径创建
+	err :=util.MkdirP(constdef.PushLogPath,constdef.OutputFilePath)
+	if err != nil {
+		log.Printf("[MkdirP-err]:err=%v", err)
+		return
+	}
+	// home相对路径检查
+	myPath,err :=util.ShowMyHomePath()
+	exist,err:=util.PathExists(fmt.Sprintf("%s/.ipfs",myPath))
+	if !exist || err!=nil {
+		log.Printf("[ShowMyHomePath] dir ~/.ipfs, is not exist ,err =%v,exist =%v", err,exist)
+		return
+	}
+	log.Printf("[ShowMyHomePath] MyIPFSdir ~/.ipfs = %s", myPath+"/.ipfs")
+
+	// 根据state执行不同初始化
 	var port int
-	var err error
 	switch status {
 	case int(constdef.GatewayStatus):
 		port, err = nodes.InitGatewayServive()
@@ -74,7 +91,6 @@ func main() {
 		log.Printf("[status-err]: invail status,status:%+v",status)
 		return
 	}
-
 	if err != nil {
 		log.Printf("[initServive-err]:%v", err)
 		return

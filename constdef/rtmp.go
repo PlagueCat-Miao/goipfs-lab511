@@ -1,6 +1,8 @@
 package constdef
 
-const PushLogPathFormat = "/home/hellcat/goworkspace/goworkspace/src/github.com/PlagueCat-Miao/goipfs-lab511/output/log/rtmppush/push-%v-%v.log"
+//检查文件夹
+const PushLogPath = "./output/log/rtmppush"
+const PushLogPathFormat = "./output/log/rtmppush/push-%v-%v.log"
 
 const  (
 	FfmpegCmd = "ffmpeg" // 该常量应为目前环境下 ffmpeg的启动函数 ，请检查你的liunx系统PATH下是否有ffmpeg

@@ -59,7 +59,6 @@ func (r *RtmpFfmpeg)RtmpPushExec(ip string,port int,room string) (string, error)
 	RtmpCancelFunc = &cancelFun
 	url:= fmt.Sprintf(constdef.RtmpFormat,ip,port,room)
 	cmdArgs := strings.Split(fmt.Sprintf(constdef.FfmpegArgFormat,url)," ")
-
 	cmd := exec.CommandContext(cancelCtx,constdef.FfmpegCmd,cmdArgs...)
 	filePath:= fmt.Sprintf(constdef.PushLogPathFormat, ip,time.Now().Format("2006010215"))
 	stdout, err := os.OpenFile(filePath, os.O_CREATE|os.O_WRONLY, 0666)
