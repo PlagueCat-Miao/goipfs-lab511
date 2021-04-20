@@ -9,7 +9,7 @@ import (
 
 func TestDirSize(t *testing.T) {
 	t.Log("[DirSize]: TestDirSize 测试")
-	mypath,_:=ShowMyHomePath()
-	sizeMB:=DirSize(fmt.Sprintf(constdef.IPFSPath,mypath))
-    log.Printf("sizeMB:%v",sizeMB)
+	mypath, _ := ShowMyHomePath()
+	sizeMB := DirSize(fmt.Sprintf(constdef.IPFSPath, mypath))
+	log.Printf("sizeMB:%v", sizeMB)
 }

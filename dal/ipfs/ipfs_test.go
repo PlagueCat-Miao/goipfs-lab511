@@ -3,8 +3,8 @@ package ipfs
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/PlagueCat-Miao/GOIPFS-gateway/constdef"
-	"github.com/PlagueCat-Miao/GOIPFS-gateway/mmlog"
+	"github.com/PlagueCat-Miao/goipfs-lab511/constdef"
+	"github.com/PlagueCat-Miao/goipfs-lab511/util"
 	. "github.com/smartystreets/goconvey/convey"
 	"os"
 	"testing"
@@ -64,7 +64,8 @@ func TestIpfsAPI(t *testing.T) {
 	//上传到ipfs
 	hash, err := ipfs.UploadIPFS(string(data))
 	if err != nil {
-		mmlog.ErrLog(err, constdef.Show, constdef.ParamNil)
+		util.ErrLog(err, constdef.Show, constdef.ParamNil)
+
 		t.Errorf("errLog为json文件 ，可以使用json 格式化工具 jq")
 		return
 	}
@@ -72,7 +73,7 @@ func TestIpfsAPI(t *testing.T) {
 	//从ipfs下载数据
 	str2, err := ipfs.CatIPFS(hash)
 	if err != nil {
-		mmlog.ErrLog(err, constdef.Show, constdef.ParamNil)
+		//mmlog.ErrLog(err, constdef.Show, constdef.ParamNil)
 		t.Errorf("errLog为json文件 ，可以使用json 格式化工具 jq")
 		return
 	}

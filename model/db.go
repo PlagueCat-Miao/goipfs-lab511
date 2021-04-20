@@ -24,7 +24,7 @@ func (f *FileInfo) OwnersMarshal(Owners map[string]ClientInfo) {
 }
 
 func (f *FileInfo) OwnersUnmarshal() (map[string]ClientInfo, error) {
-	ret := map [string]ClientInfo{}
+	ret := map[string]ClientInfo{}
 	err := json.Unmarshal([]byte(f.Owners), &ret)
 	return ret, err
 }

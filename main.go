@@ -11,10 +11,10 @@ import (
 
 	"github.com/PlagueCat-Miao/goipfs-lab511/nodes"
 	"github.com/PlagueCat-Miao/goipfs-lab511/service"
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
-	_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"strconv"
@@ -55,9 +55,6 @@ func main() {
 	var help bool
 	flag.IntVar(&status, "s", int(constdef.GatewayStatus), "身份")
 	flag.BoolVar(&help, "h", false, "帮助")
-	go func() {
-		http.ListenAndServe("127.0.0.1:8848", nil) //pprof
-	}()
 	//解析命令行参数
 	flag.Parse()
 	if help {
@@ -66,16 +63,16 @@ func main() {
 	}
 	//<================================初始化==================================>
 	// output相对路径创建
-	err :=util.MkdirP(constdef.PushLogPath,constdef.OutputFilePath)
+	err := util.MkdirP(constdef.PushLogPath, constdef.OutputFilePath)
 	if err != nil {
 		log.Printf("[MkdirP-err]:err=%v", err)
 		return
 	}
 	// home相对路径检查
-	myPath,err :=util.ShowMyHomePath()
-	exist,err:=util.PathExists(fmt.Sprintf("%s/.ipfs",myPath))
-	if !exist || err!=nil {
-		log.Printf("[ShowMyHomePath] dir ~/.ipfs, is not exist ,err =%v,exist =%v", err,exist)
+	myPath, err := util.ShowMyHomePath()
+	exist, err := util.PathExists(fmt.Sprintf("%s/.ipfs", myPath))
+	if !exist || err != nil {
+		log.Printf("[ShowMyHomePath] dir ~/.ipfs, is not exist ,err =%v,exist =%v", err, exist)
 		return
 	}
 	log.Printf("[ShowMyHomePath] MyIPFSdir ~/.ipfs = %s", myPath+"/.ipfs")
@@ -86,9 +83,9 @@ func main() {
 	case int(constdef.GatewayStatus):
 		port, err = nodes.InitGatewayServive()
 	case int(constdef.CloudStatus):
-		port,err=nodes.InitCloudServive()
+		port, err = nodes.InitCloudServive()
 	default:
-		log.Printf("[status-err]: invail status,status:%+v",status)
+		log.Printf("[status-err]: invail status,status:%+v", status)
 		return
 	}
 	if err != nil {
@@ -97,6 +94,8 @@ func main() {
 	}
 
 	router := gin.Default()
+	//<================================中间件================================>
+	pprof.Register(router) //性能参数显示
 	//<================================功能注册================================>
 	router.POST("/login", service.Login)
 	router.POST("/ipfsadd", service.IpfsAdd)

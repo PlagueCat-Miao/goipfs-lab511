@@ -43,9 +43,9 @@ func IpfsAdd(c *gin.Context) {
 			break
 		}
 	}
-	if len(CloudSaveList) == 0{  //很可能文件太大
-		err:= fmt.Errorf("invail file, addParams:%+v",addParams)
-		log.Printf("[IpfsAdd-err]:%v",err)
+	if len(CloudSaveList) == 0 { //很可能文件太大
+		err := fmt.Errorf("invail file, addParams:%+v", addParams)
+		log.Printf("[IpfsAdd-err]:%v", err)
 		util.ResponseBadRequest(c, err)
 		return
 	}

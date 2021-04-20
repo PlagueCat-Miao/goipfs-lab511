@@ -1,5 +1,3 @@
-
-
 package main
 
 import (
@@ -9,18 +7,18 @@ import (
 	"log"
 )
 
-func main(){
-	_,err:=nodes.InitEdgeServive()
+func main() {
+	_, err := nodes.InitEdgeServive()
 	nodes.EdgeServerListen(constdef.EdgePort)
 	if err != nil {
-		log.Printf("[InitEdgeServive-err]: %v", err )
+		log.Printf("[InitEdgeServive-err]: %v", err)
 		return
 	}
-	for  {
+	for {
 		printHelp()
 		var order string
-		fmt.Scanf("%s",&order)
-		switch order{
+		fmt.Scanf("%s", &order)
+		switch order {
 		case "0":
 			return
 		case "1":
@@ -39,7 +37,7 @@ func main(){
 
 }
 
-func printHelp(){
+func printHelp() {
 	fmt.Println("1. login")
 	fmt.Println("2. Add file")
 	fmt.Println("3. Read FileInfo")

@@ -17,7 +17,7 @@ type MyInfoStruct struct {
 }
 
 func InitMyInfo(dhash string, port int, status constdef.UserStatus, capacity int64) *MyInfoStruct {
-	mypath,_:=util.ShowMyHomePath()
+	mypath, _ := util.ShowMyHomePath()
 	myInfo := &MyInfoStruct{
 		ClientInfo: model.ClientInfo{
 			Dhash:    dhash,
@@ -25,14 +25,14 @@ func InitMyInfo(dhash string, port int, status constdef.UserStatus, capacity int
 			Port:     port,
 			Status:   status,
 			Capacity: capacity,
-			Remain:  capacity - util.DirSize(fmt.Sprintf(constdef.IPFSPath,mypath)),
+			Remain:   capacity - util.DirSize(fmt.Sprintf(constdef.IPFSPath, mypath)),
 		},
 		Lock: sync.Mutex{},
 	}
 	MyInfo = myInfo
 	return myInfo
 }
-func (m *MyInfoStruct) MyClientInfo() model.ClientInfo{
+func (m *MyInfoStruct) MyClientInfo() model.ClientInfo {
 	return model.ClientInfo{
 		Dhash:            m.Dhash,
 		Status:           m.Status,

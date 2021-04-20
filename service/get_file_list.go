@@ -9,13 +9,13 @@ import (
 )
 
 type GetFileListParams struct {
-	FileHash     string `form:"filehash" json:"filehash"`
-	Title        string `form:"title" json:"title"`
-	Uploader     string ` form:"uploader" json:"uploader"`
-	CreateTime   string `form:"createtime" json:"createtime"` // xx;yy
-	UpdateTime   string `form:"updatetime" json:"updatetime"` // xx;yy
-	Limit  int64 `form:"limit" json:"limit"` // 0代表没有上限制
-	Offset int64 `form:"offset" json:"offset"`
+	FileHash   string `form:"filehash" json:"filehash"`
+	Title      string `form:"title" json:"title"`
+	Uploader   string ` form:"uploader" json:"uploader"`
+	CreateTime string `form:"createtime" json:"createtime"` // xx;yy
+	UpdateTime string `form:"updatetime" json:"updatetime"` // xx;yy
+	Limit      int64  `form:"limit" json:"limit"`           // 0代表没有上限制
+	Offset     int64  `form:"offset" json:"offset"`
 }
 
 func GetFileList(c *gin.Context) {
@@ -25,39 +25,39 @@ func GetFileList(c *gin.Context) {
 		return
 	}
 	fileDb := db.NewIPFSFileInfoDB()
-	queryFactor :=map[string]string{}
-	if params.FileHash !=""{
-		queryFactor["filehash"] =  params.FileHash
+	queryFactor := map[string]string{}
+	if params.FileHash != "" {
+		queryFactor["filehash"] = params.FileHash
 	}
-	if params.Title !="" {
+	if params.Title != "" {
 		queryFactor["title"] = params.Title
 	}
-	if params.Uploader !=""{
-		queryFactor["uploader"] =  params.Uploader
+	if params.Uploader != "" {
+		queryFactor["uploader"] = params.Uploader
 	}
-	if params.CreateTime !=""{
-		queryFactor["create_time"] =  params.CreateTime
+	if params.CreateTime != "" {
+		queryFactor["create_time"] = params.CreateTime
 	}
-	if params.UpdateTime !=""{
-		queryFactor["update_time"] =  params.UpdateTime
+	if params.UpdateTime != "" {
+		queryFactor["update_time"] = params.UpdateTime
 	}
 
-	ansList,total,err:=fileDb.GetInfoList(params.Offset,params.Limit,queryFactor)
-    if err!=nil{
-		util.ResponseError(c, fmt.Errorf("[db-GetInfoList-err]:%v",err))
+	ansList, total, err := fileDb.GetInfoList(params.Offset, params.Limit, queryFactor)
+	if err != nil {
+		util.ResponseError(c, fmt.Errorf("[db-GetInfoList-err]:%v", err))
 		return
 	}
-	ansByte,err:=json.Marshal(ansList)
-	if err!=nil{
-		util.ResponseError(c, fmt.Errorf("[db-Marshal-err]:%v",err))
+	ansByte, err := json.Marshal(ansList)
+	if err != nil {
+		util.ResponseError(c, fmt.Errorf("[db-Marshal-err]:%v", err))
 		return
 	}
 
 	//返回给用户通信状态
 	msg := map[string]interface{}{
 		"ansList": string(ansByte),
-		"total": total,
-		"offset":params.Offset,
+		"total":   total,
+		"offset":  params.Offset,
 	}
 	util.ResponseOK(c, msg)
 

@@ -48,20 +48,20 @@ func IpfsSave(c *gin.Context) {
 			Note:         "",
 			Uploader:     addParams.Uploader,
 		}
-		url := fmt.Sprintf("http://%s:%v/ipfsreport",c.ClientIP(),constdef.GatewayPort)
-		msg,err:= httppack.PostJson(url,ReportParams)
-		_,msgErr:=util.ResponseParse(msg)
-		if err != nil || msgErr!=nil{
-			log.Printf("[IpfsSave-PostJson-err]:err=%v msgErr=%v ,url:%v", err,msgErr,url)
+		url := fmt.Sprintf("http://%s:%v/ipfsreport", c.ClientIP(), constdef.GatewayPort)
+		msg, err := httppack.PostJson(url, ReportParams)
+		_, msgErr := util.ResponseParse(msg)
+		if err != nil || msgErr != nil {
+			log.Printf("[IpfsSave-PostJson-err]:err=%v msgErr=%v ,url:%v", err, msgErr, url)
 		}
 	}()
 	//应当每次调用时IpfsSave时 扫描一下存储空间更新一下，再相减文件送出
-	mypath,_:=util.ShowMyHomePath()
-	operate.MyInfo.Remain = operate.MyInfo.Capacity - util.DirSize(fmt.Sprintf(constdef.IPFSPath,mypath))
+	mypath, _ := util.ShowMyHomePath()
+	operate.MyInfo.Remain = operate.MyInfo.Capacity - util.DirSize(fmt.Sprintf(constdef.IPFSPath, mypath))
 	//返回给云端自己的状态
 	msg := map[string]interface{}{
 		"dhash":  operate.MyInfo.Dhash,
-		"remain": operate.MyInfo.Remain-addParams.FileSize,
+		"remain": operate.MyInfo.Remain - addParams.FileSize,
 	}
 	util.ResponseOK(c, msg)
 }

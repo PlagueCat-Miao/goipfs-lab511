@@ -22,6 +22,8 @@
    - 占用查询 `du -h --max-depth=1 ~/.ipfs/block`
    - 播放视频 `ffplay -fflags nobuffer -analyzeduration 500000 -i rtmp://127.0.0.1:1935/live`
    - 视频推流 `ffmpeg -r 30 -i /dev/video0 -vcodec h264 -max_delay 100 -f flv -g 5 -b 700000 rtmp://127.0.0.1:1935/live -map 0:0 -map 0:2`         
+   - 性能展示 访问页面`http://127.0.0.1:xxxx/debug/pprof/` [pprof教程](https://segmentfault.com/a/1190000016412013)
+   - 美化代码 `gofmt -l -w .` `go mod tidy`
 ## 使用docker的lab511小伙伴注意
    - 加载镜像 `docker load -i xxxxx.tar` (goipfs.tar)
    - 运行镜像 `docker run -it <image id> -p 8434:8434 ` (aee0defcd78a)

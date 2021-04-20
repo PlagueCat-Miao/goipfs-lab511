@@ -56,7 +56,7 @@ func (i *IPFSFileInfoDB) GetInfoList(offset, limit int64, queryFactor map[string
 	query = query.Model(&ret).Count(&total)
 	if query.Error != nil {
 		return nil, 0, query.Error
-	}else if total ==0{ //没有查到结果
+	} else if total == 0 { //没有查到结果
 		return nil, 0, nil
 	} else if total <= offset {
 		return nil, 0, fmt.Errorf(" offset > total:Cross the border,offset:%v total:%v  ", offset, total)
@@ -79,7 +79,7 @@ func (i *IPFSFileInfoDB) OwnerIncrByFhash(fhash string, newfileInfo *model.FileI
 		txquery = txquery.Create(newfileInfo)
 		err := txquery.Error
 		if err != nil {
-			err = fmt.Errorf("[Create-err]:%v , newfileInfo:%+v",err,&newfileInfo)
+			err = fmt.Errorf("[Create-err]:%v , newfileInfo:%+v", err, &newfileInfo)
 			txquery.Rollback()
 		} else {
 			txquery.Commit()
@@ -91,16 +91,16 @@ func (i *IPFSFileInfoDB) OwnerIncrByFhash(fhash string, newfileInfo *model.FileI
 	OwnersMap, _ := fileInfo.OwnersUnmarshal()
 	newOwnersMap, _ := newfileInfo.OwnersUnmarshal()
 	mergeInfo := map[string]model.ClientInfo{}
-	for key,val:=range OwnersMap{
-		mergeInfo [key]=val
+	for key, val := range OwnersMap {
+		mergeInfo[key] = val
 	}
-	for key,val:=range newOwnersMap{ //去重
-		mergeInfo [key]=val
+	for key, val := range newOwnersMap { //去重
+		mergeInfo[key] = val
 	}
 	mergeByte, _ := json.Marshal(mergeInfo)
 	err := txquery.Updates(map[string]interface{}{"owners": string(mergeByte)}).Error
 	if err != nil {
-		err = fmt.Errorf("[Updates-err]:%v ,fileInfo:%+v mergeByte:%v",err,&fileInfo,string(mergeByte))
+		err = fmt.Errorf("[Updates-err]:%v ,fileInfo:%+v mergeByte:%v", err, &fileInfo, string(mergeByte))
 		txquery.Rollback()
 	} else {
 		txquery.Commit()
@@ -135,7 +135,7 @@ func queryFactorParse(queryFactor map[string]string) map[string]interface{} {
 			splits := strings.Split(str, ";")
 			ret[fmt.Sprintf("%+v >=  FROM_UNIXTIME(?)", key)] = splits[0]
 			ret[fmt.Sprintf("%+v < FROM_UNIXTIME(?)", key)] = splits[1]
-		case "fhash","title","uploader":
+		case "fhash", "title", "uploader":
 			ret[fmt.Sprintf("%v = ?", key)] = str
 		default:
 			ret[fmt.Sprintf("%+v like ?", key)] = "%" + str + "%"

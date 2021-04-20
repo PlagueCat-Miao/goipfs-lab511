@@ -15,7 +15,7 @@ func PostJson(url string, data interface{}) ([]byte, error) {
 	// 超时时间：5秒
 	client := &http.Client{Timeout: 3 * time.Second}
 	jsonStr, _ := json.Marshal(data)
-	log.Printf("Send:%v : %v",url,string(jsonStr))
+	log.Printf("Send:%v : %v", url, string(jsonStr))
 	resp, err := client.Post(url, constdef.JsonContentType, bytes.NewBuffer(jsonStr))
 	if err != nil {
 		return nil, fmt.Errorf("[Post-err]:%v", err)

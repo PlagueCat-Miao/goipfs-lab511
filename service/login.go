@@ -20,8 +20,8 @@ func Login(c *gin.Context) {
 		util.ResponseError(c, err)
 	}
 	msg := map[string]interface{}{
-		"dhash": userLoginInfo.Dhash,
-		"gatewaydhash" : operate.MyInfo.Dhash,
+		"dhash":        userLoginInfo.Dhash,
+		"gatewaydhash": operate.MyInfo.Dhash,
 	}
 	util.ResponseOK(c, msg)
 }

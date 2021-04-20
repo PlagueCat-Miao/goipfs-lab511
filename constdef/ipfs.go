@@ -12,7 +12,7 @@ const (
 
 const SaveListLesslength = 2
 
-const(
+const (
 	IPFSNodeUrlFormat = "/ip4/%s/tcp/4001/ipfs/%s"
 
 	LocalTestNode = "/ip4/127.0.0.1/tcp/4001/ipfs/Qma6wFrmDQ48u7GrZvvzrj5RkMAFBCNepNx62fVe5134GL"

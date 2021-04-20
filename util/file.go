@@ -12,14 +12,14 @@ import (
  */
 // https://blog.csdn.net/HaoDaWang/article/details/80916385?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.channel_param&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.channel_param
 
-func DirSize(path string) int64{
+func DirSize(path string) int64 {
 	//文件大小chennel
 	fileSize := make(chan int64)
 	//文件总大小
 	var sizeCount int64
 
 	//计算目录下所有文件占的大小总和
-	go func(){
+	go func() {
 		walkDir(path, fileSize)
 		defer close(fileSize)
 	}()
@@ -30,17 +30,17 @@ func DirSize(path string) int64{
 	}
 	//log.Println("搜索花费的时间为 " + time.Since(t).String())
 	//log.Printf("该目录大小为 %vMB\n", sizeCount/1024 /1024)
-	return sizeCount/1024 /1024
+	return sizeCount / 1024 / 1024
 
 }
 
 //递归计算目录下所有文件
-func walkDir(path string, fileSize chan <- int64){
+func walkDir(path string, fileSize chan<- int64) {
 	entries, err := ioutil.ReadDir(path)
-	if err !=nil{
-		log.Printf("[walkDir-debug]err: %v, path:%v",err,path)
+	if err != nil {
+		log.Printf("[walkDir-debug]err: %v, path:%v", err, path)
 	}
-	for _, e := range entries{
+	for _, e := range entries {
 		if e.IsDir() {
 			walkDir(filepath.Join(path, e.Name()), fileSize)
 		} else {
@@ -48,13 +48,13 @@ func walkDir(path string, fileSize chan <- int64){
 		}
 	}
 }
-func FileDetail(path string) (int64,string,error){
-	fi,err:=os.Stat(path)
-	if err !=nil {
-		log.Printf("[FileDetails-err]: %v, path:%v",err,path)
-		return 0,"",err
+func FileDetail(path string) (int64, string, error) {
+	fi, err := os.Stat(path)
+	if err != nil {
+		log.Printf("[FileDetails-err]: %v, path:%v", err, path)
+		return 0, "", err
 	}
-	return  fi.Size()/1024/1024,fi.Name(),nil
+	return fi.Size() / 1024 / 1024, fi.Name(), nil
 }
 
 /**

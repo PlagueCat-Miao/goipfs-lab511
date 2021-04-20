@@ -2,17 +2,17 @@ package ipfs
 
 import (
 	"fmt"
-	"github.com/PlagueCat-Miao/GOIPFS-gateway/constdef"
-	"github.com/PlagueCat-Miao/GOIPFS-gateway/mmlog"
+	"github.com/PlagueCat-Miao/goipfs-lab511/constdef"
+	"github.com/PlagueCat-Miao/goipfs-lab511/util"
 	"os"
 	"testing"
 )
 
 func TestMain(m *testing.M) {
 	fmt.Println("[ipfs单测 开始]")
-	err := InitIPFS()
+	_, err := InitIPFS()
 	if err != nil {
-		mmlog.ErrLog(err, constdef.Show, constdef.ParamNil)
+		util.ErrLog(err, constdef.Show, constdef.ParamNil)
 		return
 	}
 	result := m.Run()

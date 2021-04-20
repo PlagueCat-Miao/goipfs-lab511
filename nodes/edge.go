@@ -31,12 +31,11 @@ func InitEdgeServive() (int, error) {
 
 var GateWayIp string
 
-
-func EdgeLogin(){
+func EdgeLogin() {
 	fmt.Printf("Input ip:\n")
 
-	fmt.Scanf("%s",&GateWayIp)
-	url := fmt.Sprintf("http://%v:%v/login",GateWayIp, constdef.GatewayPort)
+	fmt.Scanf("%s", &GateWayIp)
+	url := fmt.Sprintf("http://%v:%v/login", GateWayIp, constdef.GatewayPort)
 	msg, err := httppack.PostJson(url, &operate.MyInfo)
 	if err != nil {
 		log.Printf("[httpPost-login-err]: %v, url:%v", err, url)
@@ -47,10 +46,10 @@ func EdgeLogin(){
 		log.Printf("[httpPost-login-err]: %v, url:%v", err, url)
 		return
 	}
-	gDhash:= msgJson.Get("gatewaydhash").MustString()
+	gDhash := msgJson.Get("gatewaydhash").MustString()
 
-	ipfsC:=ipfs.IPFSClient.NewClient()
-	peers, err := ipfsC.BootstrapAdd([]string{fmt.Sprintf(constdef.IPFSNodeUrlFormat,GateWayIp,gDhash)})
+	ipfsC := ipfs.IPFSClient.NewClient()
+	peers, err := ipfsC.BootstrapAdd([]string{fmt.Sprintf(constdef.IPFSNodeUrlFormat, GateWayIp, gDhash)})
 	if err != nil {
 		log.Printf("[Login-BootstrapAdd-err]: %v", err)
 		return
@@ -59,27 +58,27 @@ func EdgeLogin(){
 	return
 }
 
-func EdgeAddFile(){
+func EdgeAddFile() {
 	fmt.Printf("Input file path:\n")
 	var path string
-	fmt.Scanf("%s",&path)
-	size,name,err:=util.FileDetail(path)
+	fmt.Scanf("%s", &path)
+	size, name, err := util.FileDetail(path)
 	if err != nil {
-		log.Printf("[AddFile-FileDetail-err]: %v, path:%v", err,path )
+		log.Printf("[AddFile-FileDetail-err]: %v, path:%v", err, path)
 		return
 	}
-	ipfsCtrl:=ipfs.NewIPFSCtrl()
-	hash,err :=ipfsCtrl.UploadIPFSFile(path)
+	ipfsCtrl := ipfs.NewIPFSCtrl()
+	hash, err := ipfsCtrl.UploadIPFSFile(path)
 	if err != nil {
-		log.Printf("[AddFile-UploadIPFSFile-err]: %v, path:%v", err,path )
+		log.Printf("[AddFile-UploadIPFSFile-err]: %v, path:%v", err, path)
 		return
 	}
-	if GateWayIp == ""{
-		log.Printf("[AddFile-err]:GateWayIp is nil" )
+	if GateWayIp == "" {
+		log.Printf("[AddFile-err]:GateWayIp is nil")
 		return
 	}
 	url := fmt.Sprintf("http://%v:%v/ipfsadd", GateWayIp, constdef.GatewayPort)
-	body:=service.IPFSAddParams{
+	body := service.IPFSAddParams{
 		FileHash:     hash,
 		FileSize:     size,
 		Title:        name,
@@ -87,90 +86,92 @@ func EdgeAddFile(){
 		BackupAmount: 3,
 		BackupNumber: 0,
 	}
-	msg,err:= httppack.PostJson(url,body)
-	_,msgErr:=util.ResponseParse(msg)
-	if err != nil || msgErr!=nil{
-		log.Printf("[AddFile-PostJson-err]:err=%v msgErr=%v ,url:%v", err,msgErr,url)
+	msg, err := httppack.PostJson(url, body)
+	_, msgErr := util.ResponseParse(msg)
+	if err != nil || msgErr != nil {
+		log.Printf("[AddFile-PostJson-err]:err=%v msgErr=%v ,url:%v", err, msgErr, url)
 	}
-	log.Printf("Add Succ, hash:%v name:%v\n size :%v",hash,name,size)
+	log.Printf("Add Succ, hash:%v name:%v\n size :%v", hash, name, size)
 	return
 }
 
-func EdgeReadFile(){
+func EdgeReadFile() {
 	fmt.Printf("Read File List:\n\n")
 
-	ans :=""
+	ans := ""
 	limit := int64(3)
 	offset := int64(0)
 
-	total,ans,err:=readReq(limit,offset)
+	total, ans, err := readReq(limit, offset)
 	if err != nil {
 		log.Printf("[ReadFile-readReq-err]: %v ", err)
 		return
 	}
-	for{
-		total,ans,err =readReq(limit,offset)
+	for {
+		total, ans, err = readReq(limit, offset)
 		if err != nil {
 			log.Printf("[ReadFile-readReq-err]: %v", err)
 			return
 		}
-		err:=printfReadList(offset,ans)
+		err := printfReadList(offset, ans)
 		if err != nil {
 			log.Printf("[ReadFile-PrintfReadList-err]: %v, ans:%v", err, ans)
 			return
 		}
 		var order string
-		fmt.Scanf("%s",&order)
-		switch order{
+		fmt.Scanf("%s", &order)
+		switch order {
 		case "0":
 			return
 		case "P":
-			if offset - limit >=0{offset-=limit}
+			if offset-limit >= 0 {
+				offset -= limit
+			}
 		case "N":
-			if offset + limit <total{offset+=limit}
+			if offset+limit < total {
+				offset += limit
+			}
 		default:
 			fmt.Println("unknow order, try again")
 		}
 
-
 	}
 
 }
 
-func readReq(limit,offset int64)(int64,string,error){
+func readReq(limit, offset int64) (int64, string, error) {
 	url := fmt.Sprintf("http://%v:%v/getfilelist", GateWayIp, constdef.GatewayPort)
-	params:=service.GetFileListParams{
-		Limit:      limit,
-		Offset:     offset,
+	params := service.GetFileListParams{
+		Limit:  limit,
+		Offset: offset,
 	}
 
-	msg,err:=httppack.PostJson(url,params)
+	msg, err := httppack.PostJson(url, params)
 	if err != nil {
-		return 0,"",fmt.Errorf("[ReadFile-httpPost-err]: %v, url:%v", err, url)
+		return 0, "", fmt.Errorf("[ReadFile-httpPost-err]: %v, url:%v", err, url)
 	}
 	msgJson, err := util.ResponseParse(msg)
 	if err != nil {
-		return 0,"",fmt.Errorf("[ReadFile-httpPost-err]: %v, url:%v", err, url)
+		return 0, "", fmt.Errorf("[ReadFile-httpPost-err]: %v, url:%v", err, url)
 	}
-	total:= msgJson.Get("total").MustInt64()
-	ansList:= msgJson.Get("ansList").MustString()
-	return total,ansList ,nil
+	total := msgJson.Get("total").MustInt64()
+	ansList := msgJson.Get("ansList").MustString()
+	return total, ansList, nil
 }
 
-
-func printfReadList(offset int64,ans string)error{
-	if ans == ""{
+func printfReadList(offset int64, ans string) error {
+	if ans == "" {
 		return nil
 	}
 	var ansList []*model.FileInfo
-	err:=json.Unmarshal([]byte(ans),&ansList)
-	if err !=nil{
-		return fmt.Errorf("[PrintfReadList-err]:%v",err)
+	err := json.Unmarshal([]byte(ans), &ansList)
+	if err != nil {
+		return fmt.Errorf("[PrintfReadList-err]:%v", err)
 	}
-	for i,ans :=range ansList{
+	for i, ans := range ansList {
 		//var show model.FileInfo
 		//show = &ans
-		fmt.Printf("%v: %+v\n",offset+int64(i+1),ans)
+		fmt.Printf("%v: %+v\n", offset+int64(i+1), ans)
 	}
 	fmt.Println("<=============================>")
 	fmt.Println("N: next P:previous")
@@ -181,10 +182,10 @@ func printfReadList(offset int64,ans string)error{
 
 }
 
-func EdgeGetFile(){
+func EdgeGetFile() {
 	fmt.Printf("input Get File fhash:\n")
 	var fhash string
-	fmt.Scanf("%s",&fhash)
+	fmt.Scanf("%s", &fhash)
 	ipfsCtrl := ipfs.NewIPFSCtrl()
 	err := ipfsCtrl.GetIPFSFile(fhash, constdef.OutputFilePath+fhash)
 	if err != nil {
@@ -192,8 +193,7 @@ func EdgeGetFile(){
 	}
 }
 
-
-func EdgeServerListen( port int) {
+func EdgeServerListen(port int) {
 	router := gin.Default()
 	//<================================功能注册================================>
 

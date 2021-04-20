@@ -28,7 +28,7 @@ func IpfsReport(c *gin.Context) {
 		util.ResponseBadRequest(c, err)
 		return
 	}
-	reportParams.OpInfo.Ip=c.ClientIP()
+	reportParams.OpInfo.Ip = c.ClientIP()
 	var err error
 	switch reportParams.OpType {
 	case constdef.Add:
@@ -55,8 +55,8 @@ func DBAdd(reportParams IPFSReportParams) error {
 		AuthorityCode: 7,
 		Note:          reportParams.Note,
 	}
-	Ownermap := map[string] model.ClientInfo{
-		reportParams.OpInfo.Dhash : reportParams.OpInfo,
+	Ownermap := map[string]model.ClientInfo{
+		reportParams.OpInfo.Dhash: reportParams.OpInfo,
 	}
 	fileInfo.OwnersMarshal(Ownermap)
 	err := fileDb.OwnerIncrByFhash(reportParams.Fhash, fileInfo)

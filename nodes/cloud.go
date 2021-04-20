@@ -9,8 +9,9 @@ import (
 	"github.com/PlagueCat-Miao/goipfs-lab511/util"
 	"log"
 )
-type Friendlist struct{
-	Gateway []string  `yaml:"gateway"`
+
+type Friendlist struct {
+	Gateway []string `yaml:"gateway"`
 }
 
 func InitCloudServive() (int, error) {
@@ -25,14 +26,14 @@ func InitCloudServive() (int, error) {
 
 	//主动连接 网关节点
 	var fl Friendlist
-	err =util.LoadYaml(constdef.CloudConfPath,&fl,constdef.CloudFriendlistKey)
-	if err != nil  {
+	err = util.LoadYaml(constdef.CloudConfPath, &fl, constdef.CloudFriendlistKey)
+	if err != nil {
 		return -1, fmt.Errorf("[LoadYaml-err]: %v", err)
 	}
 
 	var peersLink []string
-	for _,Friendip:=range fl.Gateway{
-		url := fmt.Sprintf("http://%v:%v/login",Friendip, constdef.GatewayPort)
+	for _, Friendip := range fl.Gateway {
+		url := fmt.Sprintf("http://%v:%v/login", Friendip, constdef.GatewayPort)
 		msg, err := httppack.PostJson(url, &operate.MyInfo)
 		if err != nil {
 			log.Printf("[httpPost-login-err]: %v, url:%v", err, url)
@@ -43,11 +44,11 @@ func InitCloudServive() (int, error) {
 			log.Printf("[httpPost-login-err]: %v, url:%v", err, url)
 			continue
 		}
-		gDhash:= msgJson.Get("gatewaydhash").MustString()
-		peersLink = append(peersLink,fmt.Sprintf(constdef.IPFSNodeUrlFormat,Friendip,gDhash))
+		gDhash := msgJson.Get("gatewaydhash").MustString()
+		peersLink = append(peersLink, fmt.Sprintf(constdef.IPFSNodeUrlFormat, Friendip, gDhash))
 	}
-	if len(peersLink) ==0 {
-		return -1, fmt.Errorf("[LoadYaml-err]: no friend accept login" )
+	if len(peersLink) == 0 {
+		return -1, fmt.Errorf("[LoadYaml-err]: no friend accept login")
 	}
 
 	ipfsC := ipfsClient.NewClient()
