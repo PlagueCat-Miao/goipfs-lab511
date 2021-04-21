@@ -1,3 +1,4 @@
-output/*
-
+output/
 /test/
+**/swarm.key
+**/ClientInfo.csv

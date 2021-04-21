@@ -1,6 +1,7 @@
 # goipfs-lab511
 喵喵毕设，一个基于IPFS的视频存储系统，（虽然一个文件系统上做存储系统怪怪的）。
 欢迎交流与引用喵
+
 ## 介绍
 系统主要建立一个中心对IPFS的swap存储策略进行了增强。尽可能避免IPFS的一些问题。
 - 冷热数据存储分化。
@@ -25,14 +26,30 @@
    - 性能展示 访问页面`http://127.0.0.1:xxxx/debug/pprof/` [pprof教程](https://segmentfault.com/a/1190000016412013)
    - 美化代码 `gofmt -l -w .` `go mod tidy`
 ## 使用docker的lab511小伙伴注意
-   - 加载镜像 `docker load -i xxxxx.tar` (goipfs.tar)
-   - 运行镜像 `docker run -it <image id> -p 8434:8434 ` (aee0defcd78a)
-     - (进入docker系统) 
-     - 运行初始化脚本 `/home/hellcat/my_init.sh` 
-     - 进入代码工作区 `cd /home/hellcat/goworkspace/src/github.com/PlagueCat-Miao/goipfs-lab511`
-     - 启动 `make runEdge` or  `make runGateway` or `make runCloud`
-            
+   - 如果你是拿到了镜像压缩包
+        - 加载镜像 `docker load -i xxxxx.tar` (goipfs.tar)
+        - 运行镜像 `docker run -it <image id> -p <port:port> ` (aee0defcd78a,8434)
+        - (进入docker系统) 
+        - 运行初始化脚本 `/home/hellcat/my_init.sh` 
+        - 进入代码工作区 `cd /home/hellcat/goworkspace/src/github.com/PlagueCat-Miao/goipfs-lab511`
+        - 启动 `make runEdge` or  `make runGateway` or `make runCloud`
+   - 如果你使用Dockerfile ( *建议* )
+        - 放置附件 进入Dockerfile所在文件夹，并将以下文件拷贝至同文件夹下
+            - smarm.key 将私钥文件
+            - Dump20201004.sql 建库sql文件
+            - nginx.conf nginx配置文件
+            - miaomiao_start.sh 快捷交互脚本
+        - 构建镜像 `docker build -t miao:v34 .`
+            - 如果网不好可以多次尝试
+            - 若还不行则自行下载包并对Dockerfile的对应模块进行COPY替换
+        - 进入镜像 `docker run -it -p 8434:8434 miao:v34`
+        - 添加邻居节点 `./miaomiao_start.sh -a <ipfs_id>`
+        - 启动环境 `./miaomiao_start.sh -s` 
+        - 进入代码工作区 `cd /root/goworkspace/src/github.com/PlagueCat-Miao/goipfs-lab511`
+        - 启动 `make runEdge` or  `make runGateway` or `make runCloud`
         
+            
+       
 ## 文件目录说明
     .
     ├── cmd                             //脚本 - 仅边缘层节点使用
@@ -51,7 +68,7 @@
     ├── main.go                        
     ├── Makefile                       //定义启动函数
     └── README.md                          
-
+    
     ~/.ipfs
     ├── block                           //ipfs数据存放
     └── swarm.key                       //系统通信密钥
@@ -59,4 +76,8 @@
 ### 附录
 
 1. 怎么解决跨域？ 代理？
+    本科生帖子
    
+2. Create time 溢出了
+
+3.  

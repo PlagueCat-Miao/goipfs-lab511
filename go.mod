@@ -23,7 +23,7 @@ require (
 	github.com/multiformats/go-multiaddr v0.3.1 // indirect
 	github.com/multiformats/go-multihash v0.0.15 // indirect
 	github.com/smartystreets/goconvey v1.6.4
-	github.com/ugorji/go/codec v1.2.5 // indirect
+	github.com/ugorji/go v1.2.5 // indirect
 	github.com/whyrusleeping/tar-utils v0.0.0-20201201191210-20a61371de5b // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/config v1.4.0

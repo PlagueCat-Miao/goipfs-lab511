@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/PlagueCat-Miao/goipfs-lab511/constdef"
 	"github.com/PlagueCat-Miao/goipfs-lab511/model"
+	"github.com/PlagueCat-Miao/goipfs-lab511/util"
 	"io"
 	"log"
 	"os"
@@ -84,9 +85,18 @@ func (c *ClientsManager) SaveUserCSV() {
 //网关上线时，读取上次数据
 func (c *ClientsManager) LoadUserCSV() {
 	fileName := constdef.UserCSVName
+	isExist:=util.CheckFileIsExist(fileName)
+	if !isExist {
+		err:=util.Touch(fileName)
+		if err != nil {
+			log.Printf("[LoadUserCSV]: 新建%v失败 %+v", fileName,err)
+		}
+		log.Printf("[LoadUserCSV]:%+v 不存在,已新建", fileName)
+		return
+	}
 	fs, err := os.Open(fileName)
 	if err != nil {
-		log.Printf("can not open the file, err is %+v", err)
+		log.Printf("[LoadUserCSV]: 无法打开%v , err is %+v",fileName, err)
 	}
 	defer fs.Close()
 
