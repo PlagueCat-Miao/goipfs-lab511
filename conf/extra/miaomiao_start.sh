@@ -33,7 +33,7 @@ do
     esac
 done
 if [ $opts == true ];then
-    nginx
+    # nginx
     service mysql start
     ipfs daemon &
     echo 运行环境已启动

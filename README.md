@@ -42,7 +42,7 @@
         - 构建镜像 `docker build -t miao:v34 .`
             - 如果网不好可以多次尝试
             - 若还不行则自行下载包并对Dockerfile的对应模块进行COPY替换
-        - 进入镜像 `docker run -it -p 8434:8434 miao:v34`
+        - 进入镜像 `docker run -p 8434:8434 -it miao:v34`
         - 添加邻居节点 `./miaomiao_start.sh -a <ipfs_id>`
         - 启动环境 `./miaomiao_start.sh -s` 
         - 进入代码工作区 `cd /root/goworkspace/src/github.com/PlagueCat-Miao/goipfs-lab511`
